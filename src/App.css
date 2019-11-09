@@ -1,33 +1,221 @@
-.App {
-  text-align: center;
+/*
+body {
+  background-color: #DDA0DD;
+  background-repeat: no-repeat;
+  -webkit-background-size: 100%;
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+}*/
+
+body * {
+  box-sizing: border-box;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+body {
+  background-color: #DDA0DD;
+  margin: 0;
+  font-family: 'Josefin Sans', 'Arial', 'Aleo', serif, sans-serif;
+  font-size: 16px;
+/*   background-color: #02253b; */ /* может позже вернусь, при обновлении чтоб не пробликивал белый цвет */
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+img {
+  max-width: 100%;
+  width: auto;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+  font-weight: normal;
+  color: #FFFFFF;
+}
+ 
+
+a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.wrapper {
+  max-width: 1110px;
+  margin: 0 auto;
+}
+
+
+.player, .song {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  border-radius: 5px;
+}
+
+.player {
+  margin: 0 0 10px 0;
+}
+
+.controll {
+  display: flex;
+  align-items: center
+}
+
+
+.controll-btn {
+ margin: 30px;
+ width: 70px;
+ height: 70px;
+ background-color: #d18ad1;
+ border-radius: 50%;
+ cursor: pointer;
+ position: relative;
+}
+
+.controll-btn div {
+  width: 60px;
+  height: 60px;
+  background-color: #DDA0DD;
+  border-radius: 50%;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  text-align: center;
+  line-height: 60px;
+  font-size: 40px;
+  color: #FFFFFF;
+}
+
+
+.playPause {
+  width: 100px;
+  height: 100px;
+}
+
+.playPause div {
+  width: 90px;
+  height: 90px;
+  background-color: #DDA0DD;
+  border-radius: 50%;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  text-align: center;
+  line-height: 90px;
+  font-size: 40px;
+  color: #FFFFFF;
+}
+
+.bar {
+  width: 100%;
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.range {
+  width: 85%;
+  height: 4px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.progress-bar {
+  width: 100%;
+  position: relative;
+  height: 4px;
+  background: #FFFFFF;
+}
+
+.progress, .load {
+  /*width: 100%;*/
+  height: 4px;
+  position: absolute;
+}
+
+.progress {
+  width: 50%;
+  background: red;
+  /*left: -50%;*/
+  z-index: 3;
+}
+
+.load {
+  background: green;
+  width: 75%;
+  /*left: -25%;*/
+}
+
+
+.volume-bar {
+  display: flex;
+  width: 14%;
+  justify-content: space-between;
+}
+
+.song {
+  background: #0c5c62;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px 0;
+  color: #FFFFFF;
+}
+
+
+
+
+
+.btn-nav {
+  text-align: center;
+  line-height: 100%;
+  font-size: 50px;
+}
+
+.music-navigation {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%)
 }
 
-.App-link {
-  color: #61dafb;
+
+
+.play {
+  margin: 30px;
+  width: 100px;
+  height: 100px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 3px 20px rgba(0,0,0,.25),
+  inset 0 2px 0 rgba(255,255,255,.6),
+  0 2px 0 rgba(0,0,0,.1),
+  inset 0 0 20px rgba(0,0,0,.1);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.previous-next {
+  margin: 30px;
+  width: 70px;
+  height: 70px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 3px 20px rgba(0,0,0,.25),
+  inset 0 2px 0 rgba(255,255,255,.6),
+  0 2px 0 rgba(0,0,0,.1),
+  inset 0 0 20px rgba(0,0,0,.1);
+}
+
+.play:hover,
+.previous-next:hover {
+  background-color: #ffffff;
+  border-radius: 50%;
+  box-shadow: inset 0 0 20px rgba(0,0,0,.2),
+  0 2px 0 rgba(255,255,255,.4),
+  inset 0 2px 0 rgba(0,0,0,.4);
 }
