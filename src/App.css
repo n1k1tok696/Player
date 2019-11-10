@@ -166,56 +166,14 @@ a {
 
 
 
-.btn-nav {
-  text-align: center;
-  line-height: 100%;
-  font-size: 50px;
-}
-
-.music-navigation {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%)
+.playlist-table {
+/*  display: flex;
+  flex-direction: column;
+  align-items: center;*/
+  margin: 10px 0;
+  padding: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  border-radius: 5px;
 }
 
 
-
-.play {
-  margin: 30px;
-  width: 100px;
-  height: 100px;
-  background-color: #ffffff;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 3px 20px rgba(0,0,0,.25),
-  inset 0 2px 0 rgba(255,255,255,.6),
-  0 2px 0 rgba(0,0,0,.1),
-  inset 0 0 20px rgba(0,0,0,.1);
-}
-
-.previous-next {
-  margin: 30px;
-  width: 70px;
-  height: 70px;
-  background-color: #ffffff;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 3px 20px rgba(0,0,0,.25),
-  inset 0 2px 0 rgba(255,255,255,.6),
-  0 2px 0 rgba(0,0,0,.1),
-  inset 0 0 20px rgba(0,0,0,.1);
-}
-
-.play:hover,
-.previous-next:hover {
-  background-color: #ffffff;
-  border-radius: 50%;
-  box-shadow: inset 0 0 20px rgba(0,0,0,.2),
-  0 2px 0 rgba(255,255,255,.4),
-  inset 0 2px 0 rgba(0,0,0,.4);
-}
