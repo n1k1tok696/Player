@@ -1,11 +1,10 @@
 import React from 'react';
-import AllMusic from '../AllMusic/AllMusic'
 import { connect } from 'react-redux';
-import { store, createGql } from '../SignUp/LoginForm';
 
-import SongTable from '../SongTable/SongTable';
-import PlayList from '../Playlist/Playlist'
-import ShowPlaylist from '../Playlist/ShowPlaylist'
+import { searchRegExp } from '../helpers';
+import { createGql } from '../helpers';
+import Playlist from '../Playlist/Playlist'
+import { actionPromiseGetMusic } from '../MainPage/MainPage'
 
 
 
@@ -67,17 +66,14 @@ export function actionPromiseChangePlaylist (str) {
 }
 
 
-
-
-export function actionPromiseFindPlaylist (str) {
+export function actionPromiseCreatePlaylist (title, tracks) {
 	// let gql = createGql ()
 	// console.log(gql)
-  const name = 'FIND_PLAYLIST'
-  const promise = createGql().request(`query findPlaylist($query: String){
-  PlaylistFind(query: $query){
-     name, tracks{ _id, url, id3{ artist, title}}
-  }
-}`, {query: searchRegExp(str)})
+  const name = 'CREATE_PLAYLIST'
+  const promise = createGql().request(`mutation newPlaylist($name: String, $tracks: [TrackInput]){ 
+   PlaylistUpsert(playlist: { name: $name, tracks: $tracks})
+   	{_id, name, tracks{id3{title}}}
+ }`, {name: title, tracks: tracks})
 
   const actionPending    = () => ({ type: 'PROMISE', status: 'PENDING', payload: null,name, error: null })
   const actionResolved    = payload => ({ type: 'PROMISE', status: 'RESOLVED', payload,name, error: null })
@@ -88,15 +84,13 @@ export function actionPromiseFindPlaylist (str) {
       let payload = await promise 
       console.log(payload)
       dispatch(actionResolved(payload))
-      	dispatch(actionFindMusic(payload))
+      	// dispatch(actionFindMusic(payload))
     }
     catch (e) {
       dispatch(actionRejected(e))
     }
   }
 }
-
-
 
 
 
@@ -108,13 +102,15 @@ class CreatePlaylist extends React.Component {
 			playlistSearch: ''
 		}
 
-		this.tracks = []
+
+		// this.check = true
+		this.tracks = [] //написал отдельно чтоб при каждом добавлении трека не перерисовывался весь компонент
 
 		this.onChange = this.onChange.bind(this)
 		this.onChangePlaylist = this.onChangePlaylist.bind(this)
-		this.searchPlaylist = this.searchPlaylist.bind(this)
 		this.search = this.search.bind(this)
 		this.choose = this.choose.bind(this)
+		// this.create = this.create.bind(this)
 	}
 
 	onChange(e) {
@@ -125,57 +121,52 @@ class CreatePlaylist extends React.Component {
 
 	onChangePlaylist(e) {
 		this.setState({[e.target.name]: e.target.value})
-		this.searchPlaylist()
+		// this.searchPlaylist()
 
-	}
-
-	searchPlaylist(){
-		this.props.findPlaylist(this.state.playlistSearch)
 	}
 
 	search(str){
 		this.props.queryTrack(str)
 	}
 
-	choose(target){
-		console.log(target)
-		this.tracks.push(target)
+	choose({_id}){
+		console.log(this)
+		this.tracks.push({_id})
 		console.log(this.tracks)
 
 	}
 
+	componentDidMount(){
+		this.props.songs()
+	}
+
+
 	render(){
 		return(
 			<div>
-				<p>Choose songs</p>
-				<input type="text" 
-						value = {this.state.musicSearch}
-						name="musicSearch"
-						onChange = {this.onChange}
-				/>
 				<p>Name of playlist</p>
 				<input type="text" 
 						value = {this.state.playlistSearch}
 						name="playlistSearch"
 						onChange = {this.onChangePlaylist}
 				/>
-				<button onClick ={() => {}}>Create</button>
-				<button onClick ={this.props.searchPlaylist}>Find all playlist</button>
+				<p>Choose songs</p>
+				<input type="text" 
+						value = {this.state.musicSearch}
+						name="musicSearch"
+						autoComplete="off"
+						onChange = {this.onChange}
+				/>
+				<button onClick ={this.props.createPl.bind(this, this.state.playlistSearch, this.tracks)}>Create</button>
 				<div>
-					<PlayList songs={this.props.findMusic ? this.props.findMusic : this.props.allMusic} func={this.choose}/>
+					<Playlist songs={this.props.findMusic ? this.props.findMusic : this.props.allMusic} func={this.choose} />
 				</div>
 			</div>
 		)
 	}
 }
 
-function searchRegExp(str) {
-  return JSON.stringify([{$or:[
-  		{originalFileName: "/" + str.trim().split(/\s+/).join('|') + "/"},
-  		{"id3.album": "/" + str.trim().split(/\s+/).join('|') + "/"},
-  		{name: "/" + str.trim().split(/\s+/).join('|') + "/"}
-]}])
-}
+
 
 // function searchPlay(str) {
 //   return str ? JSON.stringify([{$or:[{name: "/" + str.trim().split(/\s+/).join('|') + "/"}]}]) : null
@@ -191,7 +182,8 @@ function mapStateToProps (store) {
 function mapDispatchToProps(dispatch){
 	return{
 		queryTrack: (str) => (dispatch(actionPromiseFindMusic(str))),
-		findPlaylist: (str) => (dispatch(actionPromiseFindPlaylist(str)))
+		createPl: (title, tracks) => (dispatch(actionPromiseCreatePlaylist(title, tracks))),
+		songs: () => (dispatch(actionPromiseGetMusic()))
 	}
 }
 

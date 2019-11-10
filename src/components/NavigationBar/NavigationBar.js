@@ -11,8 +11,9 @@ class NavigationBar extends React.Component {
 				<Link to="/" >Main page</Link>
 				<Link to="/signup" >Signup</Link>
 				<Link to="/login" >Login</Link>
-				<Link to="/about" >About</Link>
+				<Link to="/create" >Create new playlist</Link>
 				<Link to="/addmusic" >Add music</Link>
+				<Link to="/find">Find</Link>
 				<NotLogged />
 			</nav>
 			)

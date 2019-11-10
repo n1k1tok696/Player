@@ -10,14 +10,9 @@ class AddMusic extends React.Component {
 			track: ''
 
 		}
-		// this.onChange = this.onChange.bind(this)
 		this.send = this.send.bind(this)
 	}
 
-	// onChange(e) {
-	// 	this.setState({[e.target.name]: e.target.value})
-	// 	console.log(e.target.value)
-	// }
 
 	send(){
 		console.log('send?')
@@ -60,12 +55,3 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default connect(null, mapDispatchToProps)(AddMusic)
-
-{/*<form action="/track" method="post" enctype="multipart/form-data" id='trackForm'>
-  <input
-  	className="form-control" 
-  	type="file"
-  	name="track"
-  	id='track'
- />
-</form>*/}

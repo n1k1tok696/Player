@@ -3,16 +3,17 @@ import './App.css';
 import {Route, Redirect, Switch} from 'react-router-dom';
 import {Provider}   from 'react-redux';
 // import createHistory from "history/createBrowserHistory";
-import jwt_decode from 'jwt-decode'
+// import jwt_decode from 'jwt-decode'
 
 import MainPage from './components/MainPage/MainPage'
-import About from './components/About/About'
+// import About from './components/About/About'
+import CreatePlaylist from './components/CreatePlaylist/CreatePlaylist'
 import NavigationBar from './components/NavigationBar/NavigationBar'
 import SignUp from './components/SignUp/SignUp'
 import Login from './components/SignUp/LoginForm'
 import AddMusic from './components/AddMusic/AddMusic'
 import ShowPlaylist from './components/Playlist/ShowPlaylist'
-import { store } from './components/SignUp/LoginForm'
+import { store } from './components/redusers/redusers';
 
 
 // var decoded = jwt-decode();
@@ -28,54 +29,6 @@ import { store } from './components/SignUp/LoginForm'
 // gql.request(`query login{
 //   login(login: "n1k14", password: "nik123")
 // }`).then(result => console.log(1))
-
-// const defaultState = {}
-
-// let gqlReducer = (state, action) => {
-//   if (state === undefined) {
-//     return defaultState
-//   }
-//   if (action.type === 'LOGIN') {
-//     localStorage.authToken = action.token
-//     console.log("token  " + localStorage.authToken)
-//     return {token: action.token, data: jwt_decode(action.token)}
-//   }
-//   if(action.type === 'LOGOUT') {
-//     localStorage.removeItem('authToken')
-//     console.log("token  " + localStorage.authToken)
-//     return {}
-//   }
-//   return state
-// }
-
-// let promiseGqlReducer = (state, action) => {
-//   const actions = {
-//     PROMISE () {
-//       const {status, name, payload, error} = action
-//       return {
-//         ...state,
-//         [name]: {status, payload, error}
-//       }
-//     }
-//   }
-//   if (state === undefined){
-//       return {}
-//   }
-//   if (action.type in actions) {
-//     return actions[action.type]()
-//   }
-//   return state
-// }
-
-// const reducers = combineReducers({
-//   token: gqlReducer,
-//   promise: promiseGqlReducer
-// })
-
-// const store = createStore(reducers, applyMiddleware(thunk))
-
-// const actionLogin = (token) => ({type: 'LOGIN', token})
-// const actionLogout = () => ({type: 'LOGOUT'})
 
 store.subscribe(() => console.log(store.getState()))
 
@@ -114,8 +67,8 @@ function App() {
 			<Switch>
 			    <PrivateRoute 
 			        fallback="/login" 
-			        path="/about" 
-			        component = {About} />
+			        path="/create" 
+			        component = {CreatePlaylist} />
                 <PrivateRoute 
                     fallback="/login" 
                     path="/addmusic" 

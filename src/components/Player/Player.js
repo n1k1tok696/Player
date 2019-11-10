@@ -1,7 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
 
-import SongTable from '../SongTable/SongTable'
 import Playlist from '../Playlist/Playlist'
 
 class Player extends React.Component {
@@ -12,7 +11,8 @@ class Player extends React.Component {
 			// songUrl: 'http://player.asmer.fs.a-level.com.ua/track/ad9948d04c94bdc61df16197e52953ca',
 			isPlaying: false,
 			currentSong: {},
-			progress: 0
+			progress: 0,
+			// duration: 0
 		}
 
 	this.rewind = false //перемотка
@@ -23,6 +23,7 @@ class Player extends React.Component {
 	this.btnPlaySong = this.btnPlaySong.bind(this)
 	this.chooseSong = this.chooseSong.bind(this)
 	this.changeBar = this.changeBar.bind(this)
+	// this.checkDuration = this.checkDuration.bind(this)
 	}
 
 	onChange(e) {
@@ -40,20 +41,12 @@ class Player extends React.Component {
 		this.setState({isPlaying: !this.state.isPlaying})
 	}
 
-	getDuration(dur){
-		// this.refs.player.addEventListener('loadedmetadata', (e) => {
-		//   return dur = e.target.duration
-		// });
-		// console.log(dur)
-		let smth = dur.duration
-		return smth
-	}
 
 	chooseSong(song) {
 		// this.setState({currentSong: song})
-		console.log(this.state.currentSong)
 		async function awaitSong() {
 			await this.setState({currentSong: song})
+			console.log(this.state.currentSong)
 			return this.playSong()
 		}
 		awaitSong.call(this)
@@ -69,6 +62,11 @@ class Player extends React.Component {
 		})
 		this.rewind = true
 	}
+
+	// checkDuration(dur){
+	// 		let duration = dur.duration
+	// 		this.setState({duration: `${Math.floor(duration / 60)}.${(duration % 60) < 10 ? `0${Math.round(duration % 60)}` : Math.round(duration % 60)}`})
+	// }
 
 	componentDidMount(){
 		if (this.refs.player) {
@@ -92,6 +90,8 @@ class Player extends React.Component {
 		// let url = `http://player.asmer.fs.a-level.com.ua/${this.props.songs === undefined ? null : this.props.songs[3].url}`
 		if (this.refs.player) {
 			let player = this.refs.player
+
+			player.volume = this.state.vol / 100
 			if (player.paused){
 				if (this.state.isPlaying) {
 					player.play()
@@ -107,6 +107,10 @@ class Player extends React.Component {
 				player.currentTime = player.duration * this.state.progress
 			}
 		}
+
+		let duration = this.refs.player === undefined ? null : this.refs.player.duration
+
+
 
 		return(
 			<div className="wrapper">
@@ -148,15 +152,22 @@ class Player extends React.Component {
 							/>
 						</div>
 					</div>
-					<div className="time">{this.refs.player === undefined ? null : (this.getDuration(this.refs.player) / 60).toFixed(2)}</div>
+					<div className="time">{this.refs.player === undefined ? null : `${Math.floor(duration / 60)}.${(duration % 60) < 10 ? `0${Math.round(duration % 60)}` : Math.round(duration % 60)}`}</div>
 					<audio ref="player" src={this.state.currentSong.url} ></audio>
 				</div>
 				<div>
-					<Playlist songs={this.props.songs} func={this.chooseSong}/>
+					<Playlist songs={isEmpty(this.props.isPlaylistChoosen) ? this.props.songs : this.props.isPlaylistChoosen.tracks} func={this.chooseSong}/>
 				</div>
 			</div>
 		)
 	}
+}
+
+function isEmpty(obj) {
+	for(let key in obj) {
+		return false
+	}
+	return true
 }
 
 function offsetLeft(el) {
@@ -171,7 +182,8 @@ function offsetLeft(el) {
 
 function mapStateToProps(store) {
 	return {
-		songs: store.music.allMusic
+		songs: store.music.allMusic,
+		isPlaylistChoosen: store.playlists.choosenPlaylist
 	}
 }
 
