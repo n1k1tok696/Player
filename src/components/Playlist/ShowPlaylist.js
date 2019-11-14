@@ -68,15 +68,17 @@ class ShowPlaylist extends React.Component {
 					name="playlistSearch"
 					onChange = {this.onChange}/>
 				<p>Playlists</p>
-				{this.props.findedPlaylists === undefined ? null : this.props.findedPlaylists.map(item => <PlaylistTable playlists={item} func={this.choosePlaylist.bind(this, item)}/>)}
+				{this.props.findedPlaylists === undefined ? null : this.props.findedPlaylists.map(item => <PlaylistTable  key={item._id} playlists={item} func={this.choosePlaylist.bind(this, item)}/>)}
 			</div>
 		)
 	}
 }
 
+
 function mapStateToProps (store) {
 	return {
-		findedPlaylists: store.playlists.findPlaylist
+		findedPlaylists: store.playlists.findPlaylist,
+
 	}
 }
 

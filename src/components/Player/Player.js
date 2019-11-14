@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import Playlist from '../Playlist/Playlist'
 
+const actionChoosePlaylist = (payload) => ({type: 'CHOOSEN_PLAYLIST', payload})
+
 class Player extends React.Component {
 	constructor(props){
 		super(props)
@@ -23,6 +25,8 @@ class Player extends React.Component {
 	this.btnPlaySong = this.btnPlaySong.bind(this)
 	this.chooseSong = this.chooseSong.bind(this)
 	this.changeBar = this.changeBar.bind(this)
+	this.next = this.next.bind(this)
+	this.prev = this.prev.bind(this)
 	// this.checkDuration = this.checkDuration.bind(this)
 	}
 
@@ -53,20 +57,13 @@ class Player extends React.Component {
 	}
 
 	changeBar(e){
-		// console.log(this.refs.progressBar)
 		let progress = (e.clientX - offsetLeft(this.refs.progressBar)) / this.refs.progressBar.clientWidth
-		// console.log(offsetLeft(this.refs.progressBar), this.refs.progressBar.clientWidth, e.clientX)
-		// console.log(progress)
 		this.setState({
 			progress
 		})
 		this.rewind = true
 	}
 
-	// checkDuration(dur){
-	// 		let duration = dur.duration
-	// 		this.setState({duration: `${Math.floor(duration / 60)}.${(duration % 60) < 10 ? `0${Math.round(duration % 60)}` : Math.round(duration % 60)}`})
-	// }
 
 	componentDidMount(){
 		if (this.refs.player) {
@@ -86,8 +83,39 @@ class Player extends React.Component {
 		clearInterval(this.intervalID)
 	}
 
+	next(){
+		if (isEmpty(this.props.isPlaylistChoosen)) {
+			let s = this.props.songs.findIndex((item, index, arr) => {
+						return item._id === this.state.currentSong._id
+				})
+			this.setState({currentSong: this.props.songs[s+1]})
+
+		}
+		else {
+			let s = this.props.isPlaylistChoosen.tracks.findIndex((item, index, arr) => {
+						return item._id === this.state.currentSong._id
+				})
+			this.setState({currentSong: this.props.isPlaylistChoosen.tracks[s+1]})
+		}
+	}
+
+	prev(){
+		if (isEmpty(this.props.isPlaylistChoosen)) {
+			let s = this.props.songs.findIndex((item, index, arr) => {
+						return item._id === this.state.currentSong._id
+				})
+			this.setState({currentSong: this.props.songs[s-1]})
+
+		}
+		else {
+			let s = this.props.isPlaylistChoosen.tracks.findIndex((item, index, arr) => {
+						return item._id === this.state.currentSong._id
+				})
+			this.setState({currentSong: this.props.isPlaylistChoosen.tracks[s-1]})
+		}
+	}
+
 	render(){
-		// let url = `http://player.asmer.fs.a-level.com.ua/${this.props.songs === undefined ? null : this.props.songs[3].url}`
 		if (this.refs.player) {
 			let player = this.refs.player
 
@@ -112,14 +140,15 @@ class Player extends React.Component {
 
 
 
+
 		return(
 			<div className="wrapper">
 				<div className="player">
-					<div className="nameSong">{this.state.currentSong.originalFileName}</div>
+					<div className="nameSong">{this.state.currentSong && this.state.currentSong.originalFileName}</div>
 					<div className="controll">
 							<div className="controll-btn arrowLeft">
 								<div>
-									<i className="fas fa-angle-double-left"></i>
+									<i className="fas fa-angle-double-left" onClick={this.prev}></i>
 								</div>
 							</div>
 							<div className="controll-btn playPause" onClick={this.btnPlaySong}>
@@ -127,7 +156,7 @@ class Player extends React.Component {
 									<i className={this.state.isPlaying ? "fas fa-pause" : "fas fa-play"}></i>
 								</div>
 							</div>
-							<div className="controll-btn arrowRight">
+							<div className="controll-btn arrowRight" onClick={this.next}>
 								<div>
 									<i className="fas fa-angle-double-right"></i>
 								</div>
@@ -152,11 +181,11 @@ class Player extends React.Component {
 							/>
 						</div>
 					</div>
-					<div className="time">{this.refs.player === undefined ? null : `${Math.floor(duration / 60)}.${(duration % 60) < 10 ? `0${Math.round(duration % 60)}` : Math.round(duration % 60)}`}</div>
+					<div className="time">{this.state.currentSong.url ? `${Math.floor(duration / 60)}.${(duration % 60) < 10 ? `0${Math.round(duration % 60)}` : Math.round(duration % 60)}` : "0.00" }</div>
 					<audio ref="player" src={this.state.currentSong.url} ></audio>
 				</div>
 				<div>
-					<Playlist songs={isEmpty(this.props.isPlaylistChoosen) ? this.props.songs : this.props.isPlaylistChoosen.tracks} func={this.chooseSong}/>
+					<Playlist currentSong={this.state.currentSong._id} songs={isEmpty(this.props.isPlaylistChoosen) ? this.props.songs : this.props.isPlaylistChoosen.tracks} func={this.chooseSong}/>
 				</div>
 			</div>
 		)
@@ -187,8 +216,11 @@ function mapStateToProps(store) {
 	}
 }
 
-export default connect(mapStateToProps)(Player)
+function mapDispatchToProps (dispatch){
+	return{
+		allMusic: (songs) => dispatch(actionChoosePlaylist(songs))
+	}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Player)
 
-// this.refs.player === undefined ? <p>0.00</p> : this.refs.player.duration
-
-// {this.props.songs === undefined ? <div></div> : this.props.songs.map((item) => <SongTable key = {item._id} songName = {item} duration='0.00' onClick={this.chooseSong.bind(this, item)}/>)}
+// <Playlist currentSong={this.state.currentSong && this.state.currentSong._id} songs={isEmpty(this.props.isPlaylistChoosen) ? this.props.songs : this.props.isPlaylistChoosen.tracks} func={this.chooseSong}/>

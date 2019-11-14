@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 
-import { actionPromiseGetMusic } from '../AllMusic/AllMusic'
+import { actionPromiseGetMusic } from '../MainPage/MainPage'
 
 class AddMusic extends React.Component {
 	constructor(props){

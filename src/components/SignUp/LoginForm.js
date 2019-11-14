@@ -1,6 +1,7 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 
-
+import { connect } from 'react-redux';
 import { createGql } from '../helpers';
 import { store } from '../redusers/redusers';
 
@@ -82,7 +83,8 @@ class Login extends React.Component {
 		super(props)
 		this.state = {
 			username: '',
-			password: ''
+			password: '',
+			// tok: this.props.isUser
 		}
 		this.onChange = this.onChange.bind(this)
 		this.onSend = this.onSend.bind(this)
@@ -90,15 +92,39 @@ class Login extends React.Component {
 
 	onChange(e) {
 		this.setState({[e.target.name]: e.target.value})
+
 	}
 
 	onSend() {
 		let {username, password} = this.state
 		// console.log(this.state)
-		console.log(username)
-		console.log(password)
+		// console.log(username)
+		// console.log(password)
 
-		store.dispatch(actionPromiseLogin(username, password))
+		this.props.sendLog(username, password)
+
+		// store.dispatch(actionPromiseLogin(username, password))
+		// async function smth() {
+		// 	await this.props.isUser
+		// 	this.props.history.push("/find")
+		// }
+		// smth.call(this)
+
+
+		// console.log(this.props.isUser)
+		// setTimeout(() => {
+		// 	if (!isEmpty(this.props.isUser)) {
+		// 		console.log(this.props.isUser)
+		// 		this.props.history.push("/find")
+		// 	}
+		// },1000)
+
+		// if (!isEmpty(this.state.tok)) {
+		// 	// console.log(this.props.isUser)
+		// 	this.props.history.push("/find")
+		// }
+
+		
 
 
 		// let smth = gql.request(`query myfrontname($login: String!, $password: String!){
@@ -109,6 +135,12 @@ class Login extends React.Component {
 	}
 
 	render(){
+
+		if (!isEmpty(this.props.isUser)) {
+			return <Redirect to="/" />
+		}
+
+
 		return (
 			<>
 				<h2>Login</h2>
@@ -144,4 +176,23 @@ class Login extends React.Component {
 	}
 }
 
-export default Login
+function isEmpty(obj) {
+	for(let key in obj) {
+		return false
+	}
+	return true
+}
+
+function mapStateToProps(store){
+	return{
+		isUser: store.token
+	}
+}
+
+function mapDispathToProps(dispatch){
+	return{
+		sendLog: (username, password) => dispatch(actionPromiseLogin(username, password))
+	}
+} 
+
+export default connect(mapStateToProps, mapDispathToProps)(Login)

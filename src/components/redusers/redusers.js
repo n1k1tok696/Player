@@ -53,6 +53,11 @@ let playlistsReducer = (state, action) => {
       ...state,
       choosenPlaylist: action.payload}
   }
+  if (action.type === 'COOSE_PLAYLIST_SONG') {
+    return {
+      ...state,
+      choosePlaylistSong: action.payload}
+  }
 
   return state
 }

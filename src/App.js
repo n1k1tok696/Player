@@ -73,7 +73,10 @@ function App() {
                     fallback="/login" 
                     path="/addmusic" 
                     component = {AddMusic} />
-                <Route path="/find" component={ShowPlaylist} />
+                <PrivateRoute 
+                    fallback="/login" 
+                    path="/find" 
+                    component = {ShowPlaylist} />
 				<Route path="/" component={MainPage} exact />
 				<Route path="/signup" component={SignUp} />
 				<Route path="/login" component={Login} />

@@ -93,6 +93,7 @@ export function actionPromiseCreatePlaylist (title, tracks) {
 }
 
 
+const actionChoosePlaylistSong = (payload) => ({type: 'COOSE_PLAYLIST_SONG', payload})
 
 class CreatePlaylist extends React.Component {
 	constructor(props){
@@ -110,6 +111,7 @@ class CreatePlaylist extends React.Component {
 		this.onChangePlaylist = this.onChangePlaylist.bind(this)
 		this.search = this.search.bind(this)
 		this.choose = this.choose.bind(this)
+		this.checkCurrentSong = this.checkCurrentSong.bind(this)
 		// this.create = this.create.bind(this)
 	}
 
@@ -129,11 +131,25 @@ class CreatePlaylist extends React.Component {
 		this.props.queryTrack(str)
 	}
 
-	choose({_id}){
-		console.log(this)
-		this.tracks.push({_id})
-		console.log(this.tracks)
+	// choose({_id}){
+	// 	console.log(this)
+	// 	this.tracks.push({_id})
+	// 	this.props.choosePlaylistSong({_id})
+	// 	console.log(this.tracks)
 
+	// }
+
+	choose({_id}){
+		if (this.tracks.findIndex((item) => item._id === _id) === -1) { // чтоб треки, уже лежащие внутри нельзя было добавлять повторно
+			this.tracks.push({_id})	
+		}
+		this.props.choosePlaylistSong({_id})
+
+	}
+
+	checkCurrentSong(song){
+		
+		return song._id
 	}
 
 	componentDidMount(){
@@ -144,7 +160,7 @@ class CreatePlaylist extends React.Component {
 	render(){
 		return(
 			<div>
-				<p>Name of playlist</p>
+				<p>Name of playlist}</p>
 				<input type="text" 
 						value = {this.state.playlistSearch}
 						name="playlistSearch"
@@ -157,9 +173,9 @@ class CreatePlaylist extends React.Component {
 						autoComplete="off"
 						onChange = {this.onChange}
 				/>
-				<button onClick ={this.props.createPl.bind(this, this.state.playlistSearch, this.tracks)}>Create</button>
+				<button onClick ={this.state.playlistSearch ? this.props.createPl.bind(this, this.state.playlistSearch, this.tracks) : console.log('ENTER NAME BLET!!!!')}>Create</button>
 				<div>
-					<Playlist songs={this.props.findMusic ? this.props.findMusic : this.props.allMusic} func={this.choose} />
+					<Playlist currentSong={this.props.choosenSong && this.props.choosenSong._id} songs={this.props.findMusic ? this.props.findMusic : this.props.allMusic} func={this.choose} />
 				</div>
 			</div>
 		)
@@ -175,7 +191,8 @@ class CreatePlaylist extends React.Component {
 function mapStateToProps (store) {
 	return {
 		allMusic: store.music.allMusic,
-		findMusic: store.music.findMusic
+		findMusic: store.music.findMusic,
+		choosenSong: store.playlists.choosePlaylistSong
 	}
 }
 
@@ -183,7 +200,9 @@ function mapDispatchToProps(dispatch){
 	return{
 		queryTrack: (str) => (dispatch(actionPromiseFindMusic(str))),
 		createPl: (title, tracks) => (dispatch(actionPromiseCreatePlaylist(title, tracks))),
-		songs: () => (dispatch(actionPromiseGetMusic()))
+		songs: () => (dispatch(actionPromiseGetMusic())),
+		choosePlaylistSong: (id) => (dispatch(actionChoosePlaylistSong(id))) 
+
 	}
 }
 
